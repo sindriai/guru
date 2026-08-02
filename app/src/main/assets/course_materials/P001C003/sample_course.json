@@ -1,0 +1,17 @@
+{
+  "course": {
+    "pub": "SindriAI",
+    "id": "P001C003",
+    "name": "Sample Course",
+    "chapters": [
+      {
+        "id": "P001C0030101",
+        "name": "Projectile Motion"
+      },
+      {
+        "id": "P001C0030102",
+        "name": "Circle"
+      }
+    ]
+  }
+}

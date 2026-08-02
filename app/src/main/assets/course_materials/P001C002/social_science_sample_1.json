@@ -1,0 +1,203 @@
+{
+  "course": {
+    "pub": "SindriAI",
+    "id": "P001C002",
+    "name": "Social Science Sample Paper 1",
+    "chapters": [
+      {
+        "id": "P001C00201",
+        "name": "Instruction",
+        "topics": [
+          {
+            "id": "P001C0020101",
+            "name": "General Instruction"
+          }
+        ]
+      },
+      {
+        "id": "P001C00202",
+        "name": "Section A",
+        "topics": [
+          {
+            "id": "P001C0020201",
+            "name": "Question 1"
+          },
+          {
+            "id": "P001C0020202",
+            "name": "Question 2"
+          },
+          {
+            "id": "P001C0020203",
+            "name": "Question 3"
+          },
+          {
+            "id": "P001C0020204",
+            "name": "Question 4"
+          },
+          {
+            "id": "P001C0020205",
+            "name": "Question 5"
+          },
+          {
+            "id": "P001C0020206",
+            "name": "Question 6"
+          },
+          {
+            "id": "P001C0020207",
+            "name": "Question 7"
+          },
+          {
+            "id": "P001C0020208",
+            "name": "Question 8"
+          },
+          {
+            "id": "P001C0020209",
+            "name": "Question 9"
+          },
+          {
+            "id": "P001C0020210",
+            "name": "Question 10"
+          },
+          {
+            "id": "P001C0020211",
+            "name": "Question 11"
+          },
+          {
+            "id": "P001C0020212",
+            "name": "Question 12"
+          },
+          {
+            "id": "P001C0020213",
+            "name": "Question 13"
+          },
+          {
+            "id": "P001C0020214",
+            "name": "Question 14"
+          },
+          {
+            "id": "P001C0020215",
+            "name": "Question 15"
+          },
+          {
+            "id": "P001C0020216",
+            "name": "Question 16"
+          },
+          {
+            "id": "P001C0020217",
+            "name": "Question 17"
+          },
+          {
+            "id": "P001C0020218",
+            "name": "Question 18"
+          },
+          {
+            "id": "P001C0020219",
+            "name": "Question 19"
+          },
+          {
+            "id": "P001C0020220",
+            "name": "Question 20"
+          }
+        ]
+      },
+      {
+        "id": "P001C00203",
+        "name": "Section B",
+        "topics": [
+          {
+            "id": "P001C0020301",
+            "name": "Question 21"
+          },
+          {
+            "id": "P001C0020302",
+            "name": "Question 22"
+          },
+          {
+            "id": "P001C0020303",
+            "name": "Question 23"
+          },
+          {
+            "id": "P001C0020304",
+            "name": "Question 24"
+          }
+        ]
+      },
+      {
+        "id": "P001C00204",
+        "name": "Section C",
+        "topics": [
+          {
+            "id": "P001C0020401",
+            "name": "Question 25"
+          },
+          {
+            "id": "P001C0020402",
+            "name": "Question 26"
+          },
+          {
+            "id": "P001C0020403",
+            "name": "Question 27"
+          },
+          {
+            "id": "P001C0020404",
+            "name": "Question 28"
+          },
+          {
+            "id": "P001C0020405",
+            "name": "Question 29"
+          }
+        ]
+      },
+      {
+        "id": "P001C00205",
+        "name": "Section D",
+        "topics": [
+          {
+            "id": "P001C0020501",
+            "name": "Question 30"
+          },
+          {
+            "id": "P001C0020502",
+            "name": "Question 31"
+          },
+          {
+            "id": "P001C0020503",
+            "name": "Question 32"
+          },
+          {
+            "id": "P001C0020504",
+            "name": "Question 33"
+          }
+        ]
+      },
+      {
+        "id": "P001C00206",
+        "name": "Section E",
+        "topics": [
+          {
+            "id": "P001C0020601",
+            "name": "Question 34"
+          },
+          {
+            "id": "P001C0020602",
+            "name": "Question 35"
+          },
+          {
+            "id": "P001C0020603",
+            "name": "Question 36"
+          }
+        ]
+      },
+      {
+        "id": "P001C00207",
+        "name": "Section F",
+        "topics": [
+          {
+            "id": "P001C0020701",
+            "name": "Question 37"
+          }
+        ]
+      }
+    ]
+  }
+}

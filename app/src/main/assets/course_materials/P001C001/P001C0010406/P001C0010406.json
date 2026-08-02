@@ -1,0 +1,3 @@
+{
+  "content": "SECTION C: (3 Marks Each)\n\nQ31. A game consists of tossing a one-rupee coin 3 times. Hanif wins if all tosses are the same (HHH or TTT) and loses otherwise. Find the probability that Hanif will lose.\n\nAnswer / Solution:\nTotal outcomes for 3 tosses = 2^3 = 8\nWinning outcomes: HHH, TTT => 2\nLosing outcomes = 8 - 2 = 6\nProbability of losing = 6/8 = 3/4\nAnswer: 3/4\n"
+}

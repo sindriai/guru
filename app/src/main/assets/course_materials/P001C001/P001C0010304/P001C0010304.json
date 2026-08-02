@@ -1,0 +1,3 @@
+{
+  "content": "SECTION B: (2 Marks Each)\n\nQ24(A). Two concentric circles are of radii 5 cm and 3 cm. Find the length of the chord of the larger circle which touches the smaller circle.\nOR\nQ24(B). Prove that the parallelogram circumscribing a circle is a rhombus.\n\nAnswer / Solution (A):\nLet O be centre. Chord of larger circle touches smaller circle, so distance from centre to chord = 3 cm.\nIn right triangle with hypotenuse 5 and one leg 3:\nHalf-chord = √(5^2 - 3^2) = √(25 - 9) = 4\nChord length = 2×4 = 8 cm\nAnswer: 8 cm\n\nAnswer / Solution (B):\nUsing property: tangents from an external point are equal.\nThis gives AB + CD = AD + BC.\nBut in a parallelogram: AB = CD and AD = BC.\nSo 2AB = 2AD => AB = AD.\nAdjacent sides equal => it is a rhombus.\n"
+}

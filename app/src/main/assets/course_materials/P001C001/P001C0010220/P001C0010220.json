@@ -1,0 +1,3 @@
+{
+  "content": "SECTION A: Assertion-Reason (1 Mark Each)\n\nQ20. Assertion (A): If the perimeter of a circle is half that of a square, then the ratio of the area of the circle to the area of the square is 1 : π.\nReason (R): Area of a circle is πr^2 and Area of a square is side^2.\n(a) Both A and R are true and R is the correct explanation of A.\n(b) Both A and R are true but R is NOT the correct explanation of A.\n(c) A is true but R is false.\n(d) A is false but R is true.\n\nAnswer / Solution:\nGiven 2πr = (1/2)(4a) = 2a => a = πr\nArea ratio = πr^2 : (πr)^2 = πr^2 : π^2 r^2 = 1 : π\nAssertion is true. Reason is true and supports the formula usage.\nAnswer: (a)\n"
+}

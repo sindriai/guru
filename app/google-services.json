@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "493423038966",
+    "project_id": "guru-1a6cf",
+    "storage_bucket": "guru-1a6cf.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:493423038966:android:1b274a9d81d90f11feb7d7",
+        "android_client_info": {
+          "package_name": "com.sindriai.guru"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuw4eFHvrVDsh2xGKqixogYoL7qTU_yK4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

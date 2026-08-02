@@ -1,0 +1,3 @@
+{
+  "content": "SECTION A: Multiple Choice Questions (1 Mark Each)\n\nQ8. If the mean of the first n natural numbers is (5n)/9, then n =\n(a) 5\n(b) 4\n(c) 9\n(d) 10\n\nAnswer / Solution:\nMean of first n natural numbers = (n+1)/2\nGiven (n+1)/2 = (5n)/9\n=> 9n + 9 = 10n\n=> n = 9\nAnswer: (c) 9\n"
+}

@@ -1,0 +1,3 @@
+{
+  "content": "SECTION A: Multiple Choice Questions (1 Mark Each)\n\nQ13. The value of (tan1° tan2° tan3° ... tan89°) is:\n(a) 0\n(b) 1\n(c) 2\n(d) 1/2\n\nAnswer / Solution:\nUsing tanθ · tan(90°-θ) = 1, pairs multiply to 1.\nMiddle term tan45° = 1.\nSo product = 1.\nAnswer: (b) 1\n"
+}

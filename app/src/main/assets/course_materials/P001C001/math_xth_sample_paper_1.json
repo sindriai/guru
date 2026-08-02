@@ -1,0 +1,97 @@
+{
+  "course": {
+    "pub": "SindriAI",
+    "id": "P001C001",
+    "name": "10th Maths Sample Paper 1",
+    "chapters": [
+      {
+        "id": "P001C00101",
+        "name": "Instruction",
+        "topics": [
+          {
+            "id": "P001C0010101",
+            "name": "General Instruction"
+          }
+        ]
+      },
+      {
+        "id": "P001C00102",
+        "name": "Section A",
+        "topics": [
+          { "id": "P001C0010201", "name": "Question 1" },
+          { "id": "P001C0010202", "name": "Question 2" },
+          { "id": "P001C0010203", "name": "Question 3" },
+          { "id": "P001C0010204", "name": "Question 4" },
+          { "id": "P001C0010205", "name": "Question 5" },
+          { "id": "P001C0010206", "name": "Question 6" },
+          { "id": "P001C0010207", "name": "Question 7" },
+          { "id": "P001C0010208", "name": "Question 8" },
+          { "id": "P001C0010209", "name": "Question 9" },
+          { "id": "P001C0010210", "name": "Question 10" },
+          { "id": "P001C0010211", "name": "Question 11" },
+          { "id": "P001C0010212", "name": "Question 12" },
+          { "id": "P001C0010213", "name": "Question 13" },
+          { "id": "P001C0010214", "name": "Question 14" },
+          { "id": "P001C0010215", "name": "Question 15" },
+          { "id": "P001C0010216", "name": "Question 16" },
+          { "id": "P001C0010217", "name": "Question 17" },
+          { "id": "P001C0010218", "name": "Question 18" },
+          { "id": "P001C0010219", "name": "Question 19" },
+          { "id": "P001C0010220", "name": "Question 20" }
+        ]
+      },
+      {
+        "id": "P001C00103",
+        "name": "Section B",
+        "topics": [
+          { "id": "P001C0010301", "name": "Question 21" },
+          { "id": "P001C0010302", "name": "Question 22" },
+          { "id": "P001C0010303", "name": "Question 23" },
+          { "id": "P001C0010304", "name": "Question 24" },
+          { "id": "P001C0010305", "name": "Question 25" }
+        ]
+      },
+      {
+        "id": "P001C00104",
+        "name": "Section C",
+        "topics": [
+          { "id": "P001C0010401", "name": "Question 26" },
+          { "id": "P001C0010402", "name": "Question 27" },
+          { "id": "P001C0010403", "name": "Question 28" },
+          { "id": "P001C0010404", "name": "Question 29" },
+          { "id": "P001C0010405", "name": "Question 30" },
+          { "id": "P001C0010406", "name": "Question 31" }
+        ]
+      },
+      {
+        "id": "P001C00105",
+        "name": "Section D",
+        "topics": [
+          { "id": "P001C0010501", "name": "Question 32" },
+          { "id": "P001C0010502", "name": "Question 33" },
+          { "id": "P001C0010503", "name": "Question 34" },
+          { "id": "P001C0010504", "name": "Question 35" }
+        ]
+      },
+      {
+        "id": "P001C00106",
+        "name": "Section E",
+        "topics": [
+          { "id": "P001C0010601", "name": "Question 36 - Case Study 1: The Auditorium" },
+          { "id": "P001C0010602", "name": "Question 37 - Case Study 2: The Hot Air Balloon" },
+          { "id": "P001C0010603", "name": "Question 38 - Case Study 3: The Brooch" }
+        ]
+      },
+      {
+        "id": "P001C00107",
+        "name": "Solutions",
+        "topics": [
+          { "id": "P001C0010701", "name": "Section A Solutions" },
+          { "id": "P001C0010702", "name": "Section B Solutions" },
+          { "id": "P001C0010703", "name": "Section C Solutions" },
+          { "id": "P001C0010704", "name": "Section D Solutions" }
+        ]
+      }
+    ]
+  }
+}

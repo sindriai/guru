@@ -1,0 +1,3 @@
+{
+  "content": "SECTION D: (5 Marks Each)\n\nQ34. A vessel is in the form of an inverted cone. Height = 8 cm, radius of top = 5 cm. It is filled with water to the brim. When lead shots (spheres) each of radius 0.5 cm are dropped into the vessel, one-fourth of the water flows out. Find the number of lead shots dropped.\n\nAnswer / Solution:\nVolume of cone = (1/3)πr^2h = (1/3)π(5^2)(8) = 200π/3\nWater overflow = (1/4) of this = 50π/3\nVolume of one sphere (r=0.5) = (4/3)π(0.5^3) = (4/3)π(1/8) = π/6\nNumber of shots n = (50π/3) / (π/6) = (50/3)×6 = 100\nAnswer: 100\n"
+}

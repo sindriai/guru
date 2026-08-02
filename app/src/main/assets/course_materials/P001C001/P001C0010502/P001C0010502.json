@@ -1,0 +1,3 @@
+{
+  "content": "SECTION D: (5 Marks Each)\n\nQ33. State and prove the Basic Proportionality Theorem (Thales Theorem). Using the theorem: In ΔABC, if D and E are points on AB and AC such that DE ∥ BC and AD = x, DB = x − 2, AE = x + 2 and EC = x − 1, find x.\n\nAnswer / Solution:\nUsing BPT: AD/DB = AE/EC\nx/(x-2) = (x+2)/(x-1)\n=> x(x-1) = (x+2)(x-2)\n=> x^2 - x = x^2 - 4\n=> x = 4\nAnswer: 4\n"
+}

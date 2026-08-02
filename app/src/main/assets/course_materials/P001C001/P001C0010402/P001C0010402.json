@@ -1,0 +1,3 @@
+{
+  "content": "SECTION C: (3 Marks Each)\n\nQ27. Find the zeroes of the quadratic polynomial 6x^2 − 3 − 7x and verify the relationship between the zeroes and the coefficients.\n\nAnswer / Solution:\nPolynomial: 6x^2 - 7x - 3\nFactorization:\n6x^2 - 9x + 2x - 3 = 3x(2x-3) + 1(2x-3) = (3x+1)(2x-3)\nZeroes: x = -1/3 and x = 3/2\nVerification:\nSum = 3/2 + (-1/3) = (9-2)/6 = 7/6\n-b/a = -(-7)/6 = 7/6 (verified)\nProduct = (3/2)(-1/3) = -1/2\nc/a = (-3)/6 = -1/2 (verified)\n"
+}

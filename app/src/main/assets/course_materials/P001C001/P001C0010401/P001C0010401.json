@@ -1,0 +1,3 @@
+{
+  "content": "SECTION C: (3 Marks Each)\n\nQ26. Prove that √5 is an irrational number.\n\nAnswer / Solution:\nAssume √5 is rational: √5 = a/b where a,b are coprime integers.\nThen 5 = a^2/b^2 => a^2 = 5b^2.\nSo a^2 divisible by 5 => a divisible by 5. Let a = 5c.\nThen a^2 = 25c^2 = 5b^2 => b^2 = 5c^2.\nSo b divisible by 5.\nThus a and b both divisible by 5, contradicting coprime assumption.\nHence √5 is irrational.\n"
+}

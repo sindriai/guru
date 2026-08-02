@@ -1,0 +1,3 @@
+{
+  "content": "SECTION A: Multiple Choice Questions (1 Mark Each)\n\nQ3. In an isosceles triangle ABC, if AC = BC and AB^2 = 2AC^2, then ∠C is equal to:\n(a) 30°\n(b) 45°\n(c) 90°\n(d) 60°\n\nAnswer / Solution:\nGiven AB^2 = 2AC^2 and AC = BC.\nSo AB^2 = AC^2 + BC^2.\nBy converse of Pythagoras theorem, triangle ABC is right-angled at C.\nAnswer: (c) 90°\n"
+}

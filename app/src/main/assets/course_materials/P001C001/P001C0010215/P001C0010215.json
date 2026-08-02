@@ -1,0 +1,3 @@
+{
+  "content": "SECTION A: Multiple Choice Questions (1 Mark Each)\n\nQ15. Two coins are tossed simultaneously. The probability of getting at most one head is:\n(a) 1/4\n(b) 1/2\n(c) 3/4\n(d) 1\n\nAnswer / Solution:\nSample space: {HH, HT, TH, TT}\nAt most one head: {HT, TH, TT} => 3 outcomes\nProbability = 3/4\nAnswer: (c) 3/4\n"
+}

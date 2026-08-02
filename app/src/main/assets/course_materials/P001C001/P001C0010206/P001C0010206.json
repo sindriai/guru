@@ -1,0 +1,3 @@
+{
+  "content": "SECTION A: Multiple Choice Questions (1 Mark Each)\n\nQ6. A bag contains 3 red balls, 5 white balls, and 7 black balls. What is the probability that a ball drawn at random will be neither red nor black?\n(a) 1/5\n(b) 1/3\n(c) 7/15\n(d) 8/15\n\nAnswer / Solution:\nTotal balls = 3 + 5 + 7 = 15\nNeither red nor black => white balls = 5\nProbability = 5/15 = 1/3\nAnswer: (b) 1/3\n"
+}

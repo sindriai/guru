@@ -1,0 +1,16 @@
+{
+  "content": "Reflection of light एक basic phenomenon है। जब light किसी object पर पड़ती है और वापस लौटती है, तो वही reflected light हमारी eyes तक पहुँचती है, जिससे हम objects को देख पाते हैं। Transparent materials light को pass होने देते हैं, जबकि mirrors जैसी highly polished surfaces ज़्यादातर light को reflect करती हैं।
+  1st law - Angle of incidence हमेशा angle of reflection के बराबर होता है।, formula -> i = r
+  2nd Law - Incident ray, normal और reflected ray तीनों एक ही plane में होते हैं।
+  
+  Reflection by plane mirror
+  Image हमेशा virtual और erect होती है।,
+  Image का size object के बराबर होता है।,
+  Image mirror के पीछे उतनी ही दूरी पर बनती है जितनी object mirror के सामने होता है।,
+  Image laterally inverted होती है, यानी left-right उल्टा दिखता है।
+
+  There is an html file reflection.html which you can include in the answer to explain the
+  concept clearly, use like this <ihtml>reflection.html</i> to include the html file. Don't say explicitly that
+  you are showing HTLM file, just give the tag <ihtml>reflection.html</i> and say see this visuals to understand
+  the concept."
+}

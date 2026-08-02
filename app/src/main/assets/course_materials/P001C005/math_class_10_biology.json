@@ -1,0 +1,23 @@
+{
+  "course": {
+    "pub": "SindriAI",
+    "id": "P001C005",
+    "name": "Class 10 Biology",
+    "chapters": [
+      {
+        "id": "P001C00501",
+        "name": "Life Processes",
+        "topics": [
+          {
+            "id": "P001C0050101",
+            "name": "Introduction"
+          },
+          {
+            "id": "P001C0050102",
+            "name": "Introduction 2"
+          }
+        ]
+      }
+    ]
+  }
+}

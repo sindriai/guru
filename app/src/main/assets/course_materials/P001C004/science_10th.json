@@ -1,0 +1,19 @@
+{
+  "course": {
+    "pub": "SindriAI",
+    "id": "P001C004",
+    "name": "Science Class 10",
+    "chapters": [
+      {
+        "id": "P001C00401",
+        "name": "Reflection and Refraction of Light",
+        "topics": [
+          {
+            "id": "P001C0040101",
+            "name": "Reflection of Light"
+          }
+        ]
+      }
+    ]
+  }
+}

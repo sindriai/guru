@@ -1,0 +1,3 @@
+{
+  "content": "SECTION B: (2 Marks Each)\n\nQ22. In the given figure, PA and PB are tangents to the circle with centre O such that ∠APB = 50°. Write the measure of ∠OAB.\n\nAnswer / Solution:\nIn quadrilateral OAPB:\n∠OAP = 90° and ∠OBP = 90° (radius ⟂ tangent)\nSo ∠AOB = 360° - (90° + 90° + 50°) = 130°\nIn ΔOAB, OA = OB, so base angles are equal:\n∠OAB = ∠OBA = (180° - 130°)/2 = 25°\nAnswer: 25°\n"
+}

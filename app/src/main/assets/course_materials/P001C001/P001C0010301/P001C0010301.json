@@ -1,0 +1,3 @@
+{
+  "content": "SECTION B: (2 Marks Each)\n\nQ21(A). Evaluate:\n(5cos^2 60° + 4sec^2 30° - tan^2 45°) / (sin^2 30° + cos^2 30°)\nOR\nQ21(B). If sin(A − B) = 1/2 and cos(A + B) = 1/2, where 0° < A + B ≤ 90° and A > B, find A and B.\n\nAnswer / Solution (A):\nDenominator: sin^2θ + cos^2θ = 1, so denominator = 1.\ncos60° = 1/2 => cos^2 60° = 1/4\nsec30° = 2/√3 => sec^2 30° = 4/3\ntan45° = 1 => tan^2 45° = 1\nValue = 5(1/4) + 4(4/3) - 1 = 5/4 + 16/3 - 1\nLCM 12 => (15 + 64 - 12)/12 = 67/12\nAnswer: 67/12\n\nAnswer / Solution (B):\nA - B = 30° (since sin30°=1/2)\nA + B = 60° (since cos60°=1/2)\nAdd: 2A = 90° => A = 45°\nThen B = 60° - 45° = 15°\nAnswer: A = 45°, B = 15°\n"
+}

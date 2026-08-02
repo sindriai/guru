@@ -1,0 +1,3 @@
+{
+  "content": "SECTION B: (2 Marks Each)\n\nQ23. Find the mode of the following distribution:\nMarks: 0-10  10-20  20-30  30-40  40-50\nNo. of Students: 4  6  7  12  6\n\nAnswer / Solution:\nModal class is 30-40 (highest frequency 12)\nl = 30, h = 10, f1 = 12, f0 = 7, f2 = 6\nMode = l + ((f1 - f0)/(2f1 - f0 - f2)) × h\n= 30 + ((12-7)/(24-7-6))×10\n= 30 + (5/11)×10 = 30 + 50/11 ≈ 34.55\nAnswer: 34.55 (approx)\n"
+}

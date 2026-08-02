@@ -1,0 +1,3 @@
+{
+  "content": "SECTION A: Multiple Choice Questions (1 Mark Each)\n\nQ12. In ΔABC, DE ∥ BC. If AD = x, DB = x - 2, AE = x + 2 and EC = x - 1, then the value of x is:\n(a) 3\n(b) 4\n(c) 5\n(d) 3.5\n\nAnswer / Solution:\nBy Basic Proportionality Theorem:\nAD/DB = AE/EC\nx/(x-2) = (x+2)/(x-1)\n=> x(x-1) = (x+2)(x-2)\n=> x^2 - x = x^2 - 4\n=> x = 4\nAnswer: (b) 4\n"
+}

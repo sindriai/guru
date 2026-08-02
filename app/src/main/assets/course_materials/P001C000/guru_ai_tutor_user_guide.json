@@ -1,0 +1,13 @@
+{
+  "course": {
+    "pub": "SindriAI",
+    "id": "P001C000",
+    "name": "How to use Guru - AI Tutor?",
+    "chapters": [
+      {
+        "id": "P001C0000101",
+        "name": "General Instruction"
+      }
+    ]
+  }
+}

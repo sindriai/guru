@@ -1,0 +1,3 @@
+{
+  "content": "SECTION A: Multiple Choice Questions (1 Mark Each)\n\nQ14. For the following distribution:\nClass: 0-5  5-10  10-15  15-20  20-25\nFrequency: 10  15  12  20  9\nThe sum of the lower limits of the median and modal class is:\n(a) 15\n(b) 25\n(c) 30\n(d) 35\n\nAnswer / Solution:\nTotal N = 66, N/2 = 33.\nCumulative frequency crosses 33 in class 10-15 => median class lower limit = 10.\nHighest frequency is 20 in class 15-20 => modal class lower limit = 15.\nSum = 10 + 15 = 25\nAnswer: (b) 25\n"
+}

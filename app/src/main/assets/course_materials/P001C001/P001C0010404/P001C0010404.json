@@ -1,0 +1,3 @@
+{
+  "content": "SECTION C: (3 Marks Each)\n\nQ29. Prove that:\n(tanθ)/(1−cotθ) + (cotθ)/(1−tanθ) = 1 + secθ cosecθ\n\nAnswer / Solution:\nConvert tan and cot to sin/cos.\nLHS = (sinθ/cosθ)/(1 - cosθ/sinθ) + (cosθ/sinθ)/(1 - sinθ/cosθ)\n= sin^2θ/[cosθ(sinθ - cosθ)] + cos^2θ/[sinθ(cosθ - sinθ)]\n= (sin^3θ - cos^3θ)/[sinθ cosθ (sinθ - cosθ)]\nUsing a^3 - b^3 = (a-b)(a^2 + b^2 + ab):\n= (sinθ - cosθ)(sin^2θ + cos^2θ + sinθ cosθ)/[sinθ cosθ (sinθ - cosθ)]\n= (1 + sinθ cosθ)/(sinθ cosθ)\n= 1 + 1/(sinθ cosθ) = 1 + secθ cosecθ\nHence proved.\n"
+}
