@@ -143,6 +143,7 @@ fun TopicScreen(
     mainViewModel: MainViewModel,
     showPromptBar: (Boolean) -> Unit,
     onModelReady: () -> Unit,
+    onStartLearning: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -558,6 +559,7 @@ fun TopicScreen(
                         exoPlayer.playWhenReady = false
                         exoPlayer.pause()
                         hasStartedLearning = true
+                        onStartLearning()                 // <-- NEW: fires the hidden warm-up
                     },
                     modifier = Modifier.onGloballyPositioned { coords ->
                         buttonTopInRoot = coords.positionInRoot().y

@@ -198,7 +198,8 @@ fun LearningScreen(
                         },
                         onModelReady = {
                             learningViewModel.initializeGemmaEngine()
-                        }
+                        },
+                        onStartLearning = { selectedTopic.id.let { learningViewModel.startTopicWarmup(it) } }
                     )
 
                 }

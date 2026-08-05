@@ -550,7 +550,7 @@ fun ChatScreen(
         // ── Thinking indicator ───────────────────────────────────────────
         if (showThinkingUi) {
             Text(
-                text  = "Let me remember previous chats..." + ".".repeat(dotCount),
+                text  = "Thinking" + ".".repeat(dotCount),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.secondary
             )

@@ -13,13 +13,17 @@ import com.sindriai.guru.data.chatsession.ChatHistoryManager
 import com.sindriai.guru.data.chatsession.Sender
 import com.sindriai.guru.data.gemma.GemmaInferenceManager
 import com.sindriai.guru.data.tts.TextReader
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import org.json.JSONObject
 
 class LearningViewModel(
@@ -55,14 +59,41 @@ class LearningViewModel(
     private val chatHistoryManager = ChatHistoryManager(appContext)
     val chatHistory: StateFlow<ChatHistory> = chatHistoryManager.chatHistory
 
-    var isThisTopicSelectedNew = true
-
     private var textReader: TextReader? = null
     private var micHandler: MicHandler? = null
     private var gemmaManager: GemmaInferenceManager? = null
 
     private var selectedTopicId: String? = null
     private val foundationCache = mutableMapOf<String, String>()
+
+    // ─────────────────────────────────────────────────────────────────
+    // Hidden conversation warm-up state machine
+    // ─────────────────────────────────────────────────────────────────
+    //
+    // Replaces the old scattered `isThisTopicSelectedNew` boolean. Each
+    // topic goes through exactly one of these states:
+    //   NotStarted           -- "Start Learning" hasn't been pressed yet
+    //   InProgress(topicId)  -- warm-up inference is running right now
+    //   Completed(topicId)   -- warm-up finished (successfully or not)
+    //
+    // `deferred` lets any caller (e.g. the first chat question) suspend
+    // until warm-up finishes, without polling and without a race: if the
+    // student opens chat and asks something before warm-up completes,
+    // handleNewPrompt() below simply awaits the same Deferred.
+    private sealed class WarmupState {
+        object NotStarted : WarmupState()
+        data class InProgress(val topicId: String, val deferred: CompletableDeferred<Boolean>) : WarmupState()
+        data class Completed(val topicId: String, val success: Boolean) : WarmupState()
+    }
+
+    private var warmupState: WarmupState = WarmupState.NotStarted
+    private var warmupJob: Job? = null
+
+    companion object {
+        private const val TAG = "LearningViewModel"
+        private const val MAX_HISTORY_MESSAGES_IN_PROMPT = 12
+        private const val WARMUP_ENGINE_WAIT_TIMEOUT_MS = 20_000L
+    }
 
     fun initializeHeavyComponents() {
         if (_areAllEnginesReady.value || isInitializingHeavyComponents) return
@@ -160,14 +191,83 @@ class LearningViewModel(
     }
 
     fun setSelectedTopicId(id: String) {
-
-        isThisTopicSelectedNew = true
-
         selectedTopicId = id
         chatHistoryManager.loadTopic(id)
 
+        // Only pre-fetch/cache the foundation text here so it's ready the
+        // instant warm-up is triggered. Nothing is sent to Gemma yet --
+        // that only happens from startTopicWarmup(), which is wired to
+        // the "Start Learning" button, per requirement #4.
         viewModelScope.launch {
             runCatching { getFoundationContent(id) }
+        }
+    }
+
+    // Call this from the "Start Learning" button click (TopicScreen),
+    // NOT from setSelectedTopicId. Runs at most once per topic; a second
+    // call for the same topic (e.g. recomposition re-firing the click
+    // handler) is a no-op.
+    fun startTopicWarmup(topicId: String) {
+        val existing = warmupState
+        val alreadyHandled =
+            (existing is WarmupState.InProgress && existing.topicId == topicId) ||
+                    (existing is WarmupState.Completed && existing.topicId == topicId)
+        if (alreadyHandled) return
+
+        warmupJob?.cancel()
+
+        val deferred = CompletableDeferred<Boolean>()
+        warmupState = WarmupState.InProgress(topicId, deferred)
+
+        warmupJob = viewModelScope.launch {
+            val success = runCatching {
+                waitUntilEngineReady()
+
+                val manager = gemmaManager
+                    ?: error("Gemma engine not available for warm-up")
+
+                val foundation = getFoundationContent(topicId)
+
+                if (foundation.isNullOrBlank()) {
+                    // No foundation content to prime with -- nothing to
+                    // warm up, so this trivially "succeeds" (the normal
+                    // chat prompt won't attach anything either).
+                    true
+                } else {
+                    // Fresh conversation per topic so this topic's warm-up
+                    // context doesn't blend with a previous topic's.
+                    manager.resetConversation()
+                    val primingPrompt = buildWarmupPrompt(foundation)
+                    manager.primeConversation(primingPrompt).isSuccess
+                }
+            }.getOrElse { e ->
+                Log.e(TAG, "Warm-up failed for topic $topicId", e)
+                false
+            }
+
+            warmupState = WarmupState.Completed(topicId, success)
+            if (!deferred.isCompleted) deferred.complete(success)
+        }
+    }
+
+    private suspend fun waitUntilEngineReady(timeoutMs: Long = WARMUP_ENGINE_WAIT_TIMEOUT_MS) {
+        withTimeoutOrNull(timeoutMs) {
+            _areAllEnginesReady.first { it }
+        }
+    }
+
+    // Suspends until the given topic's warm-up is done (if one is
+    // running or already ran), returning whether it succeeded. Returns
+    // false immediately for any topic that never started a warm-up (e.g.
+    // foundation-less topics, or a race where the question arrives before
+    // startTopicWarmup was ever called) -- callers treat `false` as "fall
+    // back to attaching foundation directly to this turn".
+    private suspend fun awaitWarmupForTopic(topicId: String?): Boolean {
+        if (topicId.isNullOrBlank()) return false
+        return when (val state = warmupState) {
+            is WarmupState.InProgress -> if (state.topicId == topicId) state.deferred.await() else false
+            is WarmupState.Completed -> if (state.topicId == topicId) state.success else false
+            WarmupState.NotStarted -> false
         }
     }
 
@@ -217,16 +317,27 @@ class LearningViewModel(
 
         viewModelScope.launch {
             val topicId = selectedTopicId
-            val foundation = if (topicId.isNullOrBlank()) {
-                null
-            } else {
+
+            // If warm-up for this topic is still running, this suspends
+            // here until it finishes (requirement #7) instead of racing
+            // ahead with a prompt that assumes context which isn't there
+            // yet. If warm-up already succeeded, the foundation text is
+            // already inside the model's context -- we do NOT re-attach it.
+            val warmupSucceeded = awaitWarmupForTopic(topicId)
+
+            val foundationFallback = if (!warmupSucceeded && !topicId.isNullOrBlank()) {
+                // Warm-up never ran or failed -- fall back to the old
+                // behavior so the student still gets a correct (if
+                // slower) first answer instead of a broken one.
                 getFoundationContent(topicId)
+            } else {
+                null
             }
 
-            val finalPrompt = buildPromptWithFoundation(
+            val finalPrompt = buildChatPrompt(
                 userPrompt = cleanPrompt,
                 chatHistory = chatHistory.value,
-                foundation = foundation
+                foundationFallback = foundationFallback
             )
 
             currentGemmaManager.submitPrompt(
@@ -250,7 +361,6 @@ class LearningViewModel(
         foundationCache[topicId]?.let { return it }
 
         val content = withContext(Dispatchers.IO) {
-            val courseId = topicId.take(8)
             loadFoundationContentFromAssets("course_materials/${topicId.take(8)}/$topicId/$topicId.json")
         }
 
@@ -276,37 +386,62 @@ class LearningViewModel(
         }
     }
 
-    private fun buildPromptWithFoundation(
+    // The hidden priming prompt sent once per topic via
+    // GemmaInferenceManager.primeConversation(). Its response is always
+    // discarded by the manager -- this text only shapes what the model
+    // internalizes, never what's shown.
+    private fun buildWarmupPrompt(foundation: String): String {
+        val foundationForPrompt = foundation
+            .lineSequence()
+            .take(400)
+            .joinToString("\n")
+
+        return """
+            Carefully study and remember the following learning material.
+            This information will become the background context for all
+            future questions in this session.
+
+            Do not explain it.
+            Do not summarize it.
+            Do not answer any question yet.
+            Simply acknowledge internally after you have fully understood it.
+
+            Learning Material:
+            $foundationForPrompt
+        """.trimIndent()
+    }
+
+    // Normal chat-turn prompt. Small by design: recent history + the
+    // question. `foundationFallback` is only non-null when warm-up never
+    // ran or failed for this topic (see handleNewPrompt).
+    private fun buildChatPrompt(
         userPrompt: String,
         chatHistory: ChatHistory,
-        foundation: String?
+        foundationFallback: String?
     ): String {
-        val formattedHistory = chatHistory.chatHistory.joinToString(separator = "\n") { message ->
-            when (message.sender) {
-                Sender.USER -> "User: ${message.content}"
-                Sender.GURU -> "Guru: ${message.content}"
+        val formattedHistory = chatHistory.chatHistory
+            .takeLast(MAX_HISTORY_MESSAGES_IN_PROMPT)
+            .joinToString(separator = "\n") { message ->
+                when (message.sender) {
+                    Sender.USER -> "User: ${message.content}"
+                    Sender.GURU -> "Guru: ${message.content}"
+                }
+            }
+
+        val context = buildString {
+            if (!foundationFallback.isNullOrBlank()) {
+                append("Foundation Knowledge (use it to teach): ")
+                append(foundationFallback.lineSequence().take(120).joinToString("\n"))
+                append("\n")
+            }
+            if (formattedHistory.isNotBlank()) {
+                append("Conversation so far: ")
+                append(formattedHistory)
             }
         }
 
-        val foundationForPrompt = foundation
-            ?.lineSequence()
-            ?.take(120)
-            ?.joinToString("\n")
-            ?: "N/A"
-
-        var instruction = ""
-
-        if(isThisTopicSelectedNew){
-            instruction = "Foundation Knowledge (use it to teach): " +
-                    "$foundationForPrompt, " +
-                    "Conversation so far: $formattedHistory"
-            isThisTopicSelectedNew = false
-        }else{
-            instruction = ""
-        }
-
         return """
-            $instruction
+            $context
             
             Answer in less than 120 words.
             Try to answer in simple and easy way.
@@ -324,6 +459,7 @@ class LearningViewModel(
 
     override fun onCleared() {
         super.onCleared()
+        warmupJob?.cancel()
         micHandler?.clear()
         gemmaManager?.close()
     }

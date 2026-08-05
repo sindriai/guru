@@ -93,6 +93,80 @@ class GemmaInferenceManager(
         )
     }
 
+    // ─────────────────────────────────────────────────────────────────
+    // Hidden conversation warm-up
+    // ─────────────────────────────────────────────────────────────────
+    //
+    // Pushes [primingPrompt] into the SAME conversation object used by
+    // submitPrompt() -- it does NOT create a second engine/conversation,
+    // does NOT touch _gemmaState (so no "thinking" UI appears), and
+    // discards every token of the model's reply. The only thing that
+    // survives is the model's own internal KV-cache / context state,
+    // which is exactly what we want: the foundation material becomes
+    // part of this conversation's history without ever being rendered.
+    //
+    // Uses the same mutex as submitPrompt()/resetConversation() so it can
+    // never interleave with a real user turn or a mid-flight reset. If
+    // the engine hasn't finished constructing its conversation yet, this
+    // lazily finishes that initialization itself instead of failing --
+    // callers don't need to separately "wait for ready".
+    suspend fun primeConversation(primingPrompt: String): Result<Unit> {
+        return try {
+            mutex.withLock {
+                if (conversation == null) {
+                    // Engine/conversation construction hasn't completed
+                    // yet (race with the init{} coroutine) -- finish it
+                    // here under the same lock rather than failing.
+                    initializeEngineAndConversation()
+                }
+
+                val currentConversation = conversation
+                    ?: return@withLock Result.failure<Unit>(
+                        IllegalStateException("Gemma engine failed to initialize")
+                    )
+
+                val signal = CompletableDeferred<Unit>()
+                var failure: Throwable? = null
+
+                val callback = object : MessageCallback {
+                    override fun onMessage(message: Message) {
+                        // Intentionally discarded: never forwarded to
+                        // streamingGuruText, ChatHistoryManager, TTS, or
+                        // any UI-observable state.
+                    }
+
+                    override fun onDone() {
+                        if (!signal.isCompleted) signal.complete(Unit)
+                    }
+
+                    override fun onError(throwable: Throwable) {
+                        failure = throwable
+                        if (!signal.isCompleted) signal.complete(Unit)
+                    }
+                }
+
+                currentConversation.sendMessageAsync(primingPrompt, callback)
+                signal.await()
+
+                failure?.let { return@withLock Result.failure<Unit>(it) }
+                Result.success(Unit)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Conversation warm-up failed", e)
+            Result.failure(e)
+        }
+    }
+
+    // Starts a brand-new conversation on the existing engine (no new
+    // Engine instance). Call this before priming a new topic so each
+    // topic's warm-up context doesn't bleed into the next topic's.
+    suspend fun resetConversation() {
+        mutex.withLock {
+            conversation?.close()
+            conversation = createNewConversation(engine)
+        }
+    }
+
     fun submitPrompt(
         newPrompt: String,
         attachedImageUri: Uri?,
