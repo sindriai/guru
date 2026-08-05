@@ -42,6 +42,7 @@ import com.sindriai.guru.ui.learning.ui_components.DraggableTitleBar
 import com.sindriai.guru.ui.learning.ui_components.PromptBar
 import com.sindriai.guru.ui.learning.ui_components.TopScreen
 import com.sindriai.guru.ui.learning.ui_components.topic_screen.TopicScreen
+import com.sindriai.guru.ui.main.MainViewModel
 import kotlinx.coroutines.launch
 
 sealed class AttachmentUiState {
@@ -54,6 +55,7 @@ sealed class AttachmentUiState {
 fun LearningScreen(
     context: Context,
     learningViewModel: LearningViewModel,
+    mainViewModel: MainViewModel,
     modifier: Modifier = Modifier,
     onOpenCourseStore: () -> Unit
 ) {
@@ -190,8 +192,12 @@ fun LearningScreen(
                         streamingGuruText = streamingGuruText,
                         topicId = selectedTopic.id,
                         currentGemmaState = currentGemmaState,
+                        mainViewModel = mainViewModel,
                         showPromptBar = { boolean ->
                             showPromptBar = boolean
+                        },
+                        onModelReady = {
+                            learningViewModel.initializeGemmaEngine()
                         }
                     )
 

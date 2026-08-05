@@ -1,3 +1,7 @@
+// MainViewModel.kt — only change: MODEL_FILE_NAME removed, modelFile() now
+// points at GemmaDownloadWorker.FILE_NAME so there is exactly one filename
+// constant for the model, shared by the writer (Worker) and the reader
+// (isModelAlreadyDownloaded / modelFile).
 package com.sindriai.guru.ui.main
 
 import android.content.Context
@@ -13,8 +17,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.io.File
-
-private const val MODEL_FILE_NAME = "gemma-3n-E2B-it-int4.task"
 
 data class ModelDownloadUiState(
     val inProgress: Boolean = false,
@@ -40,7 +42,12 @@ class MainViewModel(
 
     private var observeJob: Job? = null
 
-    private fun modelFile(): File = File(appContext.filesDir, MODEL_FILE_NAME)
+    // CHANGED: was `File(appContext.filesDir, MODEL_FILE_NAME)` with a
+    // locally-defined constant that had drifted out of sync with the
+    // filename GemmaDownloadWorker actually writes to. Now both sides read
+    // from the same constant, so this check can never disagree with what
+    // the Worker produced.
+    private fun modelFile(): File = File(appContext.filesDir, GemmaDownloadWorker.FILE_NAME)
 
     fun isModelAlreadyDownloaded(): Boolean {
         val final = modelFile()
@@ -58,7 +65,7 @@ class MainViewModel(
     private val _uiState = MutableStateFlow(
         if (isModelAlreadyDownloaded()) {
             val file = modelFile()
-            appConfig.settings.gemmaModelPath = file.absolutePath  // ✅ add this
+            appConfig.settings.gemmaModelPath = file.absolutePath
             ModelDownloadUiState(
                 inProgress = false,
                 percent = 100,
@@ -69,12 +76,10 @@ class MainViewModel(
     )
     val uiState: StateFlow<ModelDownloadUiState> = _uiState
 
-    /** ✅ Start download OR attach to existing running download */
     fun startModelDownloadIfNeeded() {
 
         if (_uiState.value.isSuccess) return
 
-        // If file exists, mark success.
         if (isModelAlreadyDownloaded()) {
             _uiState.value = _uiState.value.copy(
                 inProgress = false,
@@ -87,18 +92,15 @@ class MainViewModel(
             return
         }
 
-        // ✅ Enqueue (KEEP will NOT start duplicate if already running)
         gemmaDownloader.start(
             token = huggingFaceToken,
             directory = appContext.filesDir
         )
 
-        // ✅ Attach observer once
         if (observeJob?.isActive == true) return
 
         observeJob = viewModelScope.launch {
             gemmaDownloader.observeUniqueWork().asFlow().collect { workInfos ->
-                // workInfos can be empty briefly
                 val info = workInfos
                     .firstOrNull { it.state == WorkInfo.State.RUNNING }
                     ?: workInfos
@@ -109,7 +111,6 @@ class MainViewModel(
             }
         }
 
-        // Set initial state (helps UI immediately)
         _uiState.value = _uiState.value.copy(
             inProgress = true,
             errorMessage = null
@@ -180,7 +181,6 @@ class MainViewModel(
     }
 
     fun retry() {
-        // Cancel and re-enqueue
         gemmaDownloader.cancel()
         observeJob?.cancel()
         observeJob = null

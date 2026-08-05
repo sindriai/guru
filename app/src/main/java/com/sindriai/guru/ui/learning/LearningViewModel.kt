@@ -128,6 +128,37 @@ class LearningViewModel(
         }
     }
 
+    fun initializeGemmaEngine() {
+        if (gemmaManager != null) return
+
+        viewModelScope.launch {
+            try {
+                val localGemmaManager = withContext(Dispatchers.Default) {
+                    val modelPath = appConfig.settings.gemmaModelPath
+                    if (modelPath.isNullOrBlank()) null
+                    else GemmaInferenceManager(
+                        context = appContext,
+                        modelPath = modelPath,
+                        scope = viewModelScope
+                    )
+                }
+
+                gemmaManager = localGemmaManager
+
+                localGemmaManager?.let { manager ->
+                    launch {
+                        manager.gemmaState.collect { state ->
+                            _gemmaState.value = state
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _gemmaState.value = GemmaInferenceManager.InferenceState.ERROR
+            }
+        }
+    }
+
     fun setSelectedTopicId(id: String) {
 
         isThisTopicSelectedNew = true

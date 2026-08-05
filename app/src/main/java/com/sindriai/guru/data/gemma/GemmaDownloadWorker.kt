@@ -1,3 +1,4 @@
+// GemmaDownloadWorker.kt — companion object, only change: FILE_NAME visibility
 package com.sindriai.guru.data.gemma
 
 import android.app.NotificationChannel
@@ -41,7 +42,13 @@ class GemmaDownloadWorker(
         private const val URL =
             "https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm/resolve/main/gemma-4-E2B-it.litertlm?download=true"
 
-        private const val FILE_NAME = "gemma-4-E2B-it.litertlm"
+        // CHANGED: was `private const val FILE_NAME`. This is the actual
+        // filename the download writes to disk under `filesDir`, so it must
+        // be visible to MainViewModel — otherwise anything outside this
+        // Worker that wants to check "is the model already on disk" has no
+        // way to know the real filename and drifts out of sync with it
+        // (which is exactly what caused the DownloadGemma3nDialog bug).
+        const val FILE_NAME = "gemma-4-E2B-it.litertlm"
     }
 
     private val okHttpClient = OkHttpClient.Builder().build()
@@ -61,7 +68,6 @@ class GemmaDownloadWorker(
             return Result.success(workDataOf(OUTPUT_FILE_PATH to finalFile.absolutePath))
         }
 
-        // Start in foreground immediately
         setForeground(createForegroundInfo(percent = 0))
 
         return try {
@@ -75,21 +81,18 @@ class GemmaDownloadWorker(
 
             Result.success(workDataOf(OUTPUT_FILE_PATH to resultFile.absolutePath))
         } catch (e: Exception) {
-            // retry on network issues, fail on others (simple heuristic)
             if (e is IOException) Result.retry() else Result.failure()
         }
     }
 
     private fun buildOpenAppPendingIntent(): PendingIntent {
-        // This opens your launcher activity (whatever is defined as MAIN/LAUNCHER in manifest)
         val launchIntent = applicationContext.packageManager
             .getLaunchIntentForPackage(applicationContext.packageName)
             ?.apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
             }
-            ?: Intent() // fallback (shouldn't happen)
+            ?: Intent()
 
-        // Proper back stack (recommended)
         val stackBuilder = TaskStackBuilder.create(applicationContext).addNextIntentWithParentStack(launchIntent)
 
         val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -113,7 +116,7 @@ class GemmaDownloadWorker(
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setProgress(100, percent.coerceIn(0, 100), percent <= 0)
-            .setContentIntent(openAppIntent)     // ✅ THIS makes click open app
+            .setContentIntent(openAppIntent)
             .build()
 
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -127,10 +130,7 @@ class GemmaDownloadWorker(
         }
     }
 
-
     private fun updateForeground(percent: Int) {
-        // ForegroundInfo re-set is allowed; it updates the notification.
-        // (WorkManager handles it internally)
         setForegroundAsync(createForegroundInfo(percent))
     }
 
@@ -153,7 +153,6 @@ class GemmaDownloadWorker(
         partFile: File,
         etagFile: File
     ): File {
-        // 1) HEAD: size + ETag
         val headReq = Request.Builder()
             .url(URL)
             .header("Authorization", "Bearer $token")
@@ -165,7 +164,6 @@ class GemmaDownloadWorker(
         val remoteEtag = headResp.header("ETag")
         headResp.close()
 
-        // ETag check
         val savedEtag = readSmallText(etagFile)
         if (!savedEtag.isNullOrBlank() && !remoteEtag.isNullOrBlank() && savedEtag != remoteEtag) {
             partFile.delete()
@@ -175,7 +173,6 @@ class GemmaDownloadWorker(
 
         if (!remoteEtag.isNullOrBlank()) writeSmallText(etagFile, remoteEtag)
 
-        // 2) GET (Range if resuming)
         val reqBuilder = Request.Builder()
             .url(URL)
             .header("Authorization", "Bearer $token")
@@ -188,9 +185,9 @@ class GemmaDownloadWorker(
         val resp = okHttpClient.newCall(reqBuilder.build()).execute()
 
         when (resp.code) {
-            206 -> Unit // good for resume
+            206 -> Unit
             200 -> {
-                if (resumeFrom > 0L) partFile.delete() // server ignored range
+                if (resumeFrom > 0L) partFile.delete()
             }
             416 -> {
                 val partLen = if (partFile.exists()) partFile.length() else 0L
@@ -231,7 +228,7 @@ class GemmaDownloadWorker(
 
         sink.use { bufferedSink ->
             while (true) {
-                if (isStopped) throw IOException("Stopped") // cancelled
+                if (isStopped) throw IOException("Stopped")
                 val read = source.read(bufferedSink.buffer, 8 * 1024L)
                 if (read == -1L) break
 
@@ -243,7 +240,6 @@ class GemmaDownloadWorker(
                     if (percent != lastPercent) {
                         lastPercent = percent
 
-                        // Update WorkManager progress
                         setProgress(
                             workDataOf(
                                 PROGRESS_PERCENT to percent,
@@ -252,7 +248,6 @@ class GemmaDownloadWorker(
                             )
                         )
 
-                        // Update notification too
                         updateForeground(percent)
                     }
                 }

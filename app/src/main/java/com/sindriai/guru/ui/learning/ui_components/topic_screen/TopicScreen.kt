@@ -85,6 +85,8 @@ import androidx.media3.ui.PlayerView
 import com.sindriai.guru.data.chatsession.ChatHistory
 import com.sindriai.guru.data.gemma.GemmaInferenceManager
 import com.sindriai.guru.ui.learning.ui_components.ChatScreen
+import com.sindriai.guru.ui.main.MainViewModel
+import com.sindriai.guru.ui.main.dialogs.DownloadGemma3nDialog
 import io.noties.markwon.Markwon
 
 private val VIDEO_CORNER_RADIUS = 20.dp
@@ -138,7 +140,9 @@ fun TopicScreen(
     streamingGuruText: String?,
     topicId: String?,
     currentGemmaState: GemmaInferenceManager.InferenceState,
+    mainViewModel: MainViewModel,
     showPromptBar: (Boolean) -> Unit,
+    onModelReady: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -467,30 +471,46 @@ fun TopicScreen(
                                 )
                             }
                         } else {
+                            var modelReady by remember {
+                                mutableStateOf(mainViewModel.isModelAlreadyDownloaded())
+                            }
 
-                            Text(
-                                text = "आपके doubts और questions",
-                                style = MaterialTheme.typography.labelLarge,
-                                fontSize = 20.sp,
-                                color = Color(0xFF088F8F),
-                                fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(12.dp, 50.dp, 12.dp, 0.dp)
-                            )
+                            if (!modelReady) {
+                                DownloadGemma3nDialog(
+                                    mainViewModel = mainViewModel,
+                                    onDownloadComplete = { modelReady = true }
+                                )
+                            }
 
-                            Log.d("TopicID", "topic id changed to " + topicId)
+                            if (modelReady) {
+                                LaunchedEffect(Unit) {
+                                    onModelReady()
+                                }
 
-                            ChatScreen(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(12.dp, 0.dp, 12.dp, 200.dp),
-                                chatHistory = chatHistory,
-                                streamingGuruText = streamingGuruText,
-                                topicId = topicId,
-                                currentGemmaState = currentGemmaState
-                            )
+                                Text(
+                                    text = "आपके doubts और questions",
+                                    style = MaterialTheme.typography.labelLarge,
+                                    fontSize = 20.sp,
+                                    color = Color(0xFF088F8F),
+                                    fontWeight = FontWeight.Bold,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(12.dp, 50.dp, 12.dp, 0.dp)
+                                )
+
+                                Log.d("TopicID", "topic id changed to " + topicId)
+
+                                ChatScreen(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(12.dp, 0.dp, 12.dp, 200.dp),
+                                    chatHistory = chatHistory,
+                                    streamingGuruText = streamingGuruText,
+                                    topicId = topicId,
+                                    currentGemmaState = currentGemmaState
+                                )
+                            }
                         }
                     }
                 }
