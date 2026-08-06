@@ -500,6 +500,17 @@ fun TopicScreen(
                                         .padding(12.dp, 50.dp, 12.dp, 0.dp)
                                 )
 
+                                Text(
+                                    text = "(नीचे दिए mic पर tap करके English में सवाल पूछें या Hindi/English में type करें)",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontSize = 11.sp,
+                                    color = Color.Gray,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 20.dp, vertical = 8.dp)
+                                )
+
                                 Log.d("TopicID", "topic id changed to " + topicId)
 
                                 ChatScreen(
